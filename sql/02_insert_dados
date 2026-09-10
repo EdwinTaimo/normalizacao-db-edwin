@@ -1,0 +1,129 @@
+-- ============================================================
+-- 02_insert_dados.sql
+-- Povoamento do esquema normalizado com os 16 funcionários
+-- do ficheiro Dados_Nao_Normalizados_Funcionarios.xlsx
+-- ============================================================
+
+-- ---------- Províncias ----------
+INSERT INTO provincia (nome_provincia, pais) VALUES
+    ('Maputo Cidade', 'Moçambique'),
+    ('Maputo Província', 'Moçambique'),
+    ('Gaza', 'Moçambique'),
+    ('Inhambane', 'Moçambique'),
+    ('Sofala', 'Moçambique'),
+    ('Nampula', 'Moçambique'),
+    ('Manica', 'Moçambique'),
+    ('Tete', 'Moçambique'),
+    ('Zambézia', 'Moçambique'),
+    ('Cabo Delgado', 'Moçambique');
+
+-- ---------- Cidades ----------
+INSERT INTO cidade (nome_cidade, nome_provincia) VALUES
+    ('Maputo', 'Maputo Cidade'),
+    ('Matola', 'Maputo Província'),
+    ('Chókwè', 'Gaza'),
+    ('Maxixe', 'Inhambane'),
+    ('Beira', 'Sofala'),
+    ('Nampula', 'Nampula'),
+    ('Chimoio', 'Manica'),
+    ('Tete', 'Tete'),
+    ('Quelimane', 'Zambézia'),
+    ('Pemba', 'Cabo Delgado');
+
+-- ---------- Cargos ----------
+INSERT INTO cargo (cod_cargo, nome_cargo) VALUES
+    ('C01', 'Técnico de Informática'),
+    ('C02', 'Contabilista'),
+    ('C03', 'Engenheiro Civil'),
+    ('C04', 'Enfermeiro'),
+    ('C05', 'Professor'),
+    ('C06', 'Motorista'),
+    ('C07', 'Gestor de Recursos Humanos'),
+    ('C08', 'Assistente Administrativo');
+
+-- ---------- Funções ----------
+INSERT INTO funcao (cod_funcao, nome_funcao) VALUES
+    ('F01', 'Tecnologias de Informação'),
+    ('F02', 'Finanças'),
+    ('F03', 'Engenharia'),
+    ('F04', 'Saúde'),
+    ('F05', 'Educação'),
+    ('F06', 'Logística'),
+    ('F07', 'Recursos Humanos'),
+    ('F08', 'Administração');
+
+-- ---------- Funcionários ----------
+-- (id_funcionario é AUTO_INCREMENT; os IDs 1 a 16 abaixo seguem a
+-- ordem de inserção e são usados nas tabelas de filhos/contactos e
+-- nas queries de exemplo.)
+INSERT INTO funcionario
+    (nome, data_nasc, nuit, bi, email, endereco, nome_cidade, cod_cargo, cod_funcao, posto_trabalho, data_admissao)
+VALUES
+    ('Amélia Fernanda Cossa', '1985-03-12', '100234567', '110100123456A', 'amelia.cossa@empresa.co.mz', 'Av. Julius Nyerere, n.º 245, Sommerschield', 'Maputo', 'C01', 'F01', 'Sede Maputo', '2015-02-05'),
+    ('Bernardo Alfredo Machava', '1979-07-22', '100345678', '110100234567B', 'bernardo.machava@empresa.co.mz', 'Rua da Resistência, n.º 8, Polana Caniço', 'Maputo', 'C02', 'F02', 'Sede Maputo', '2010-09-14'),
+    ('Celina Armando Sitoe', '1990-11-03', '100456789', '110200345678C', 'celina.sitoe@empresa.co.mz', 'Av. Samora Machel, n.º 12, Fomento', 'Matola', 'C08', 'F08', 'Delegação Matola', '2018-06-01'),
+    ('Domingos Paulo Nhantumbo', '1982-01-30', '100567890', '110300456789D', 'domingos.nhantumbo@empresa.co.mz', 'Rua 3, n.º 56, Chókwè-Sede', 'Chókwè', 'C06', 'F06', 'Delegação Gaza', '2012-03-10'),
+    ('Eugénia Marta Muchanga', '1988-05-18', '100678901', '110400567890E', 'eugenia.muchanga@empresa.co.mz', 'Av. Eduardo Mondlane, n.º 301, Maxixe-Sede', 'Maxixe', 'C04', 'F04', 'Delegação Inhambane', '2016-08-20'),
+    ('Fernando José Macuácua', '1975-09-25', '100789012', '110500678901F', 'fernando.macuacua@empresa.co.mz', 'Av. Poder Popular, n.º 77, Macuti', 'Beira', 'C03', 'F03', 'Delegação Beira', '2008-01-15'),
+    ('Graça Isabel Zunguze', '1992-12-07', '100890123', '110600789012G', 'graca.zunguze@empresa.co.mz', 'Rua da Frescura, n.º 19, Ponta Gêa', 'Beira', 'C05', 'F05', 'Delegação Beira', '2019-02-02'),
+    ('Hélder António Cuamba', '1980-04-14', '100901234', '110700890123H', 'helder.cuamba@empresa.co.mz', 'Av. 25 de Setembro, n.º 150, Alto Maé', 'Maputo', 'C07', 'F07', 'Sede Maputo', '2011-11-11'),
+    ('Ivete Sara Chirindza', '1995-06-29', '101012345', '110800901234I', 'ivete.chirindza@empresa.co.mz', 'Rua do Bagamoyo, n.º 5, Muhipiti', 'Nampula', 'C01', 'F01', 'Delegação Nampula', '2020-07-03'),
+    ('João Baptista Nhaca', '1978-08-09', '101123456', '110900012345J', 'joao.nhaca@empresa.co.mz', 'Av. Josina Machel, n.º 200, Namahera', 'Nampula', 'C02', 'F02', 'Delegação Nampula', '2009-05-25'),
+    ('Lúcia Ermelinda Bila', '1991-02-16', '101234567', '111000123456K', 'lucia.bila@empresa.co.mz', 'Rua da Base, n.º 33, Chaimite', 'Beira', 'C08', 'F08', 'Delegação Beira', '2017-09-19'),
+    ('Marcelino Inácio Tembe', '1983-10-21', '101345678', '111100234567L', 'marcelino.tembe@empresa.co.mz', 'Av. Kwame Nkrumah, n.º 410, Coop', 'Maputo', 'C03', 'F03', 'Sede Maputo', '2013-04-08'),
+    ('Noémia Alzira Massingue', '1987-03-04', '101456789', '111200345678M', 'noemia.massingue@empresa.co.mz', 'Rua de Chimoio, n.º 67, Chingussura', 'Chimoio', 'C04', 'F04', 'Delegação Manica', '2014-12-12'),
+    ('Osvaldo Simião Ubisse', '1976-07-27', '101567890', '111300456789N', 'osvaldo.ubisse@empresa.co.mz', 'Av. 7 de Setembro, n.º 90, Matundo', 'Tete', 'C06', 'F06', 'Delegação Tete', '2006-10-30'),
+    ('Paulina Fátima Uache', '1993-01-15', '101678901', '111400567890O', 'paulina.uache@empresa.co.mz', 'Rua da Missão, n.º 24, Chalaua', 'Quelimane', 'C05', 'F05', 'Delegação Zambézia', '2021-09-09'),
+    ('Ricardo Manuel Come', '1981-06-02', '101789012', '111500678901P', 'ricardo.come@empresa.co.mz', 'Av. Franqueza, n.º 18, Chuwaula', 'Pemba', 'C07', 'F07', 'Delegação Cabo Delgado', '2010-07-17');
+
+-- ---------- Filhos ----------
+INSERT INTO funcionario_filho (id_funcionario, nome_filho) VALUES
+    (1, 'Cátia Cossa'),
+    (2, 'Nelson Machava'),
+    (2, 'Ivete Machava'),
+    (2, 'Suzana Machava'),
+    (4, 'Paulo Nhantumbo Jr'),
+    (4, 'Alzira Nhantumbo'),
+    (5, 'Marta Muchanga'),
+    (6, 'José Macuácua'),
+    (6, 'Beatriz Macuácua'),
+    (6, 'Adriano Macuácua'),
+    (8, 'António Cuamba Jr'),
+    (8, 'Filomena Cuamba'),
+    (10, 'Baptista Nhaca Jr'),
+    (11, 'Ermelinda Bila'),
+    (12, 'Inácio Tembe Jr'),
+    (12, 'Rosa Tembe'),
+    (14, 'Simião Ubisse Jr'),
+    (14, 'Alcinda Ubisse'),
+    (14, 'Custódio Ubisse'),
+    (16, 'Manuel Come Jr');
+
+-- ---------- Contactos telefónicos ----------
+INSERT INTO funcionario_contacto (id_funcionario, numero_celular) VALUES
+    (1, '841234567'),
+    (1, '821234567'),
+    (2, '845678901'),
+    (2, '861122334'),
+    (4, '847890123'),
+    (4, '878901234'),
+    (5, '849012345'),
+    (6, '823456789'),
+    (6, '843456789'),
+    (6, '863456789'),
+    (7, '844567890'),
+    (7, '824567890'),
+    (8, '825678901'),
+    (9, '846789012'),
+    (10, '827890123'),
+    (10, '847890124'),
+    (11, '848901234'),
+    (12, '829012345'),
+    (12, '849012346'),
+    (12, '869012347'),
+    (13, '841122334'),
+    (14, '822233445'),
+    (14, '842233445'),
+    (14, '843344556'),
+    (16, '824455667'),
+    (16, '844455667');
