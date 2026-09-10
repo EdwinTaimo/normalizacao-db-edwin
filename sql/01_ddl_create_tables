@@ -73,3 +73,28 @@ CREATE TABLE funcionario (
     FOREIGN KEY (cod_funcao) REFERENCES funcao (cod_funcao)
         ON UPDATE CASCADE
 );
+
+- ---------- Tabelas "toda-chave" resultantes dos grupos repetitivos (1FN/4FN) ----------
+
+CREATE TABLE funcionario_filho (
+    id_funcionario  INT          NOT NULL,
+    nome_filho      VARCHAR(120) NOT NULL,
+    PRIMARY KEY (id_funcionario, nome_filho),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionario (id_funcionario)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE funcionario_contacto (
+    id_funcionario   INT          NOT NULL,
+    numero_celular   VARCHAR(15)  NOT NULL,
+    PRIMARY KEY (id_funcionario, numero_celular),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionario (id_funcionario)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ---------- Índices adicionais úteis para pesquisa ----------
+
+CREATE INDEX idx_funcionario_cargo   ON funcionario (cod_cargo);
+CREATE INDEX idx_funcionario_funcao  ON funcionario (cod_funcao);
+CREATE INDEX idx_funcionario_cidade  ON funcionario (nome_cidade);
+
