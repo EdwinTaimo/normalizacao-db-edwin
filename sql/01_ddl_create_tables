@@ -1,0 +1,75 @@
+-- ============================================================
+-- 01_ddl_create_tables.sql
+-- Esquema normalizado (pós-4FN) do Sistema de Gestão de Funcionários
+-- Autor: Edwin Jerry Joaquim Taimo Gema — Universidade Licungo
+--
+-- Ordem de criação: primeiro as tabelas "independentes"
+-- (PROVINCIA, CARGO, FUNCAO), depois as que dependem delas
+-- (CIDADE depende de PROVINCIA; FUNCIONARIO depende de CIDADE,
+-- CARGO e FUNCAO), e por último as tabelas "toda chave"
+-- resultantes dos grupos repetitivos (FUNCIONARIO_FILHO,
+-- FUNCIONARIO_CONTACTO), que dependem de FUNCIONARIO.
+-- ============================================================
+
+DROP TABLE IF EXISTS funcionario_contacto;
+DROP TABLE IF EXISTS funcionario_filho;
+DROP TABLE IF EXISTS funcionario;
+DROP TABLE IF EXISTS cidade;
+DROP TABLE IF EXISTS provincia;
+DROP TABLE IF EXISTS cargo;
+DROP TABLE IF EXISTS funcao;
+
+-- ---------- Tabelas de referência (resolvem as dependências transitivas) ----------
+
+CREATE TABLE provincia (
+    nome_provincia  VARCHAR(50)  NOT NULL,
+    pais            VARCHAR(50)  NOT NULL DEFAULT 'Moçambique',
+    PRIMARY KEY (nome_provincia)
+);
+
+CREATE TABLE cidade (
+    nome_cidade     VARCHAR(50)  NOT NULL,
+    nome_provincia  VARCHAR(50)  NOT NULL,
+    PRIMARY KEY (nome_cidade),
+    FOREIGN KEY (nome_provincia) REFERENCES provincia (nome_provincia)
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE cargo (
+    cod_cargo   VARCHAR(5)   NOT NULL,
+    nome_cargo  VARCHAR(60)  NOT NULL,
+    PRIMARY KEY (cod_cargo)
+);
+
+CREATE TABLE funcao (
+    cod_funcao   VARCHAR(5)   NOT NULL,
+    nome_funcao  VARCHAR(60)  NOT NULL,
+    PRIMARY KEY (cod_funcao)
+);
+
+-- ---------- Entidade principal ----------
+
+CREATE TABLE funcionario (
+    id_funcionario   INT           NOT NULL AUTO_INCREMENT,
+    nome             VARCHAR(120)  NOT NULL,
+    data_nasc        DATE          NOT NULL,
+    nuit             CHAR(9)       NOT NULL,
+    bi               VARCHAR(13)   NOT NULL,
+    email            VARCHAR(120)  NOT NULL,
+    endereco         VARCHAR(150)  NOT NULL,
+    nome_cidade      VARCHAR(50)   NOT NULL,
+    cod_cargo        VARCHAR(5)    NOT NULL,
+    cod_funcao       VARCHAR(5)    NOT NULL,
+    posto_trabalho   VARCHAR(80)   NOT NULL,
+    data_admissao    DATE          NOT NULL,
+    PRIMARY KEY (id_funcionario),
+    UNIQUE (nuit),
+    UNIQUE (bi),
+    UNIQUE (email),
+    FOREIGN KEY (nome_cidade) REFERENCES cidade (nome_cidade)
+        ON UPDATE CASCADE,
+    FOREIGN KEY (cod_cargo) REFERENCES cargo (cod_cargo)
+        ON UPDATE CASCADE,
+    FOREIGN KEY (cod_funcao) REFERENCES funcao (cod_funcao)
+        ON UPDATE CASCADE
+);
