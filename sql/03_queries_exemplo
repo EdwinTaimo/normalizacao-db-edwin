@@ -1,0 +1,115 @@
+-- ============================================================
+-- 03_queries_exemplo.sql
+-- Queries de demonstração — sintaxe MySQL (GROUP_CONCAT).
+-- Em PostgreSQL, troca GROUP_CONCAT(x SEPARATOR ', ') por
+-- STRING_AGG(x, ', ').
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- QUERY 1 — Reconstituir as colunas "profissionais" e de morada
+-- da tabela original (0FN), juntando FUNCIONARIO às 4 tabelas
+-- de referência criadas na 3FN.
+-- ------------------------------------------------------------
+SELECT
+    f.nome                    AS "Nome",
+    f.data_nasc                AS "Data Nasc.",
+    f.nuit                     AS "NUIT",
+    f.bi                       AS "BI",
+    f.email                    AS "Email",
+    f.endereco                 AS "Endereço",
+    c.nome_cidade               AS "Cidade",
+    p.nome_provincia             AS "Província",
+    p.pais                      AS "País",
+    cg.nome_cargo                AS "Cargo",
+    cg.cod_cargo                 AS "Cód. Cargo",
+    fu.nome_funcao                AS "Função",
+    fu.cod_funcao                  AS "Cód. Função",
+    f.posto_trabalho              AS "Posto de Trabalho",
+    f.data_admissao                AS "Data Admissão"
+FROM funcionario f
+JOIN cidade     c  ON c.nome_cidade    = f.nome_cidade
+JOIN provincia  p  ON p.nome_provincia = c.nome_provincia
+JOIN cargo      cg ON cg.cod_cargo     = f.cod_cargo
+JOIN funcao     fu ON fu.cod_funcao    = f.cod_funcao
+ORDER BY f.id_funcionario;
+
+
+-- ------------------------------------------------------------
+-- QUERY 2 — Reconstituir as colunas "Filho 1, Filho 2, Filho 3"
+-- a partir de FUNCIONARIO_FILHO, com LEFT JOIN (para não perder
+-- os funcionários sem nenhum filho, como Celina Sitoe) e
+-- GROUP_CONCAT para juntar todos os filhos numa só célula.
+-- ------------------------------------------------------------
+SELECT
+    f.nome                                           AS "Nome",
+    COUNT(ff.nome_filho)                              AS "Nº de Filhos",
+    GROUP_CONCAT(ff.nome_filho SEPARATOR ', ')         AS "Filhos"
+FROM funcionario f
+LEFT JOIN funcionario_filho ff ON ff.id_funcionario = f.id_funcionario
+GROUP BY f.id_funcionario, f.nome
+ORDER BY f.id_funcionario;
+
+
+-- ------------------------------------------------------------
+-- QUERY 3 — Reconstituir as colunas "Celular 1, Celular 2,
+-- Celular 3" a partir de FUNCIONARIO_CONTACTO, com o mesmo
+-- princípio da query anterior.
+-- ------------------------------------------------------------
+SELECT
+    f.nome                                                AS "Nome",
+    COUNT(fc.numero_celular)                               AS "Nº de Contactos",
+    GROUP_CONCAT(fc.numero_celular SEPARATOR ', ')          AS "Contactos"
+FROM funcionario f
+LEFT JOIN funcionario_contacto fc ON fc.id_funcionario = f.id_funcionario
+GROUP BY f.id_funcionario, f.nome
+ORDER BY f.id_funcionario;
+
+
+-- ------------------------------------------------------------
+-- QUERY 4 — Reconstituição completa: uma única linha por
+-- funcionário, com TODAS as colunas da tabela original,
+-- incluindo filhos e contactos agregados. Isto prova que o
+-- esquema normalizado não perdeu nenhuma informação em relação
+-- à folha de cálculo original — só deixou de a repetir.
+-- ------------------------------------------------------------
+SELECT
+    f.nome                                           AS "Nome",
+    f.data_nasc                                       AS "Data Nasc.",
+    f.nuit                                             AS "NUIT",
+    f.bi                                               AS "BI",
+    f.email                                            AS "Email",
+    f.endereco                                         AS "Endereço",
+    c.nome_cidade                                       AS "Cidade",
+    p.nome_provincia                                     AS "Província",
+    p.pais                                               AS "País",
+    cg.nome_cargo                                        AS "Cargo",
+    fu.nome_funcao                                       AS "Função",
+    f.posto_trabalho                                     AS "Posto de Trabalho",
+    f.data_admissao                                       AS "Data Admissão",
+    (SELECT GROUP_CONCAT(ff.nome_filho SEPARATOR ', ')
+       FROM funcionario_filho ff
+      WHERE ff.id_funcionario = f.id_funcionario)          AS "Filhos",
+    (SELECT GROUP_CONCAT(fc.numero_celular SEPARATOR ', ')
+       FROM funcionario_contacto fc
+      WHERE fc.id_funcionario = f.id_funcionario)          AS "Contactos"
+FROM funcionario f
+JOIN cidade     c  ON c.nome_cidade    = f.nome_cidade
+JOIN provincia  p  ON p.nome_provincia = c.nome_provincia
+JOIN cargo      cg ON cg.cod_cargo     = f.cod_cargo
+JOIN funcao     fu ON fu.cod_funcao    = f.cod_funcao
+ORDER BY f.id_funcionario;
+
+
+-- ------------------------------------------------------------
+-- QUERY 5 (bónus) — Uma pergunta de negócio que era difícil de
+-- responder na folha original, e que passa a ser trivial com o
+-- esquema normalizado: quantos funcionários existem por cargo,
+-- por ordem decrescente.
+-- ------------------------------------------------------------
+SELECT
+    cg.nome_cargo        AS "Cargo",
+    COUNT(*)              AS "Nº de Funcionários"
+FROM funcionario f
+JOIN cargo cg ON cg.cod_cargo = f.cod_cargo
+GROUP BY cg.nome_cargo
+ORDER BY COUNT(*) DESC;
